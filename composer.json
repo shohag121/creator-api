@@ -1,0 +1,13 @@
+{
+    "name": "shohag/creator-api",
+    "description": "Simple Zoho creator api php client.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Shazahanul Islam Shohag",
+            "email": "shohag121@gmail.com"
+        }
+    ],
+    "require": {}
+}
