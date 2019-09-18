@@ -22,10 +22,10 @@ class CreatorAPI
     public function addRecord( $formName, $dataArray)
     {
         // https://creator.zoho.com/api/<ownername>/<format>/<applicationName>/form/<formName>/record/add
-        $curlURL = $this->apiEndPoint . $this->applicationOwner . '/' . $this->applicationName . '/form/' . $formName . '/record/add?authtoken='. $this->authToken. '&scope=creatorapi&';
+        $curlURL = $this->apiEndPoint . $this->applicationOwner . '/' . $this->format. '/' . $this->applicationName . '/form/' . $formName . '/record/add/?authtoken='. $this->authToken. '&scope=creatorapi';
 
         try {
-            return $this->doCurl($curlURL, http_build_query($dataArray));
+            return $this->doCurl($curlURL, $dataArray);
         } catch (\Exception $exception){
             return $exception;
         }
@@ -55,10 +55,10 @@ class CreatorAPI
 
         if($post){
 //            curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
-//            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-//                'Content-Type: multipart/form-data',
-//                'Connection: Keep-Alive'
-//            ));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                'Content-Type: multipart/form-data',
+                'Connection: Keep-Alive'
+            ));
             curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
         }
 
