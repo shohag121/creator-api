@@ -1,5 +1,5 @@
 {
-    "name": "shohag/creator-api",
+    "name": "shohag/zoho-creator-api",
     "description": "Simple Zoho creator api php client.",
     "type": "library",
     "license": "MIT",
