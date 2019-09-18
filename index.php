@@ -1,6 +1,6 @@
 <?php
 use shohag\CreatorAPI\CreatorAPI;
-require_once 'CreatorAPI.php';
+require_once 'vendor/autoload.php';
 $conf = require_once 'config.php';
 
 $creator = new CreatorAPI($conf);
