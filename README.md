@@ -24,7 +24,7 @@ Usage
 
 ```
 require_once 'vendor/autoload.php';
-use shohag\CreatorAPI\CreatorAPI;
+use shohag\ZohoCreatorAPI\CreatorAPI;
 
 $conf = array(
             'applicationOwner' => 'your application owner',

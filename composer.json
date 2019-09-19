@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "shohag\\CreatorAPI\\": "src/"
+            "shohag\\ZohoCreatorAPI\\": "src/"
         }
     }
 }

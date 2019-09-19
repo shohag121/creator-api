@@ -1,7 +1,7 @@
 <?php
 
 
-namespace shohag\CreatorAPI;
+namespace shohag\ZohoCreatorAPI;
 
 
 class CreatorAPI
@@ -98,10 +98,10 @@ class CreatorAPI
 
     }
 
-    public function searchRecords($criteria, $viewName, $page = 1, $limit = 200)
+    public function searchRecords($criteria, $viewName, $start = 0, $limit = 200)
     {
 // TODO: check it and fix
-        $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}/?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}&startindex={$page}&limit={$limit}&criteria=({$criteria})";
+        $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}&startindex={$start}&limit={$limit}&criteria=({$criteria})";
 
         return $this->doCurl($curlURL);
     }
@@ -110,7 +110,7 @@ class CreatorAPI
     public function allRecords($viewName)
     {
 // https://creator.zoho.com/api/<format>/<applicationLinkName>/view/<viewLinkName>
-        $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}/?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}";
+        $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}";
 
         // TODO: check it and fix
         return $this->doCurl($curlURL);
