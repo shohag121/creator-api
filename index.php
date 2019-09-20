@@ -16,4 +16,8 @@ $data = array(
 //echo $creator->deleteRecord('File_ID=1005','Upload_File',$data,false);
 
 //echo $creator->allRecords('All_files');
-echo $creator->searchRecords('ID!=null','All_files', 1, 3);
+//echo $creator->searchRecords('ID!=null','All_files', 1, 3);
+
+//echo $creator->allSharedApplications();
+//echo $creator->listSharedApplications(2);
+//echo $creator->allApplications();

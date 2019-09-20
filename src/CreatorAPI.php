@@ -3,7 +3,10 @@
 
 namespace shohag\ZohoCreatorAPI;
 
-
+/**
+ * Class CreatorAPI
+ * @package shohag\ZohoCreatorAPI
+ */
 class CreatorAPI
 {
     /**
@@ -17,7 +20,17 @@ class CreatorAPI
      * @var string
      */
     private $format = 'json';
+
+    /**
+     * application name
+     * @var mixed
+     */
     private $applicationName;
+
+    /**
+     * Authentication Token
+     * @var mixed
+     */
     private $authToken;
     private $apiEndPoint = 'https://creator.zoho.com/api/';
 
@@ -98,22 +111,152 @@ class CreatorAPI
 
     }
 
+    /**
+     * Search records from a view or report
+     * @param $criteria
+     * @param $viewName
+     * @param int $start
+     * @param int $limit
+     * @return bool|\Exception|string
+     */
     public function searchRecords($criteria, $viewName, $start = 0, $limit = 200)
     {
-// TODO: check it and fix
         $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}&startindex={$start}&limit={$limit}&criteria=({$criteria})";
 
-        return $this->doCurl($curlURL);
+        try {
+            return $this->doCurl($curlURL);
+        } catch (\Exception $exception){
+            return $exception;
+        }
+
     }
 
-
+    /**
+     * Get all record of a view
+     * @param $viewName
+     * @return bool|\Exception|string
+     */
     public function allRecords($viewName)
     {
-// https://creator.zoho.com/api/<format>/<applicationLinkName>/view/<viewLinkName>
+
         $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}";
 
-        // TODO: check it and fix
-        return $this->doCurl($curlURL);
+        try {
+            return $this->doCurl($curlURL);
+        } catch (\Exception $exception){
+            return $exception;
+        }
+    }
+
+    /**
+     * Get all fields from a form
+     * @param $formName
+     * @return bool|\Exception|string
+     */
+    public function allFields($formName)
+    {
+
+        $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/{$formName}/fields?authtoken={$this->authToken}&scope=creatorapi&zc_ownername={$this->applicationOwner}";
+
+        try {
+            return $this->doCurl($curlURL);
+        } catch (\Exception $exception){
+            return $exception;
+        }
+    }
+
+    /**
+     * Get applications
+     * @param int $limit
+     * @param bool $shared
+     * @return bool|\Exception|string
+     */
+    public function listApplications( $limit = 0, $shared = false)
+    {
+        $need = 'applications';
+        if ($shared){
+            $need = 'sharedapps';
+        }
+
+        $curlURL = "{$this->apiEndPoint}{$this->format}/{$need}?authtoken={$this->authToken}&scope=creatorapi";
+
+        if ($limit != 0){
+            $curlURL = $curlURL . '&limit='. $limit;
+        }
+
+        try {
+            return $this->doCurl($curlURL);
+        } catch (\Exception $exception){
+            return $exception;
+        }
+    }
+
+    /**
+     * Get All of your owned Applications
+     * @return bool|\Exception|string
+     */
+    public function allApplications()
+    {
+        return $this->listApplications();
+    }
+
+    /**
+     * Get the Applications shared to you
+     * @param int $limit
+     * @return bool|\Exception|string
+     */
+    public function listSharedApplications($limit = 0)
+    {
+        return $this->listApplications($limit, true);
+    }
+
+    /**
+     * Get All the Applications shared to you
+     * @return bool|\Exception|string
+     */
+    public function allSharedApplications()
+    {
+        return $this->listSharedApplications();
+    }
+
+    /**
+     * Get all forms and reports of an application
+     * @param string $applicationName
+     * @return bool|\Exception|string
+     */
+    public function allFormsAndReports($applicationName = '')
+    {
+        if ($applicationName == ''){
+            $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/formsandviews?authtoken={$this->authToken}&scope=creatorapi&zc_ownername={$this->applicationOwner}";
+        } else {
+            $curlURL = "{$this->apiEndPoint}{$this->format}/{$applicationName}/formsandviews?authtoken={$this->authToken}&scope=creatorapi&zc_ownername={$this->applicationOwner}";
+        }
+
+        try {
+            return $this->doCurl($curlURL);
+        } catch (\Exception $exception){
+            return $exception;
+        }
+    }
+
+    /**
+     * Get all forms of an application
+     * @param string $applicationName
+     * @return bool|\Exception|string
+     */
+    public function allForms($applicationName = '')
+    {
+        if ($applicationName == ''){
+            $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/forms?authtoken={$this->authToken}&scope=creatorapi&zc_ownername={$this->applicationOwner}";
+        } else {
+            $curlURL = "{$this->apiEndPoint}{$this->format}/{$applicationName}/forms?authtoken={$this->authToken}&scope=creatorapi&zc_ownername={$this->applicationOwner}";
+        }
+
+        try {
+            return $this->doCurl($curlURL);
+        } catch (\Exception $exception){
+            return $exception;
+        }
     }
 
     /**
