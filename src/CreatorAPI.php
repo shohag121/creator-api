@@ -119,9 +119,14 @@ class CreatorAPI
      * @param int $limit
      * @return bool|\Exception|string
      */
-    public function searchRecords($criteria, $viewName, $start = 0, $limit = 200)
+    public function searchRecords($criteria, $viewName, $start = 0, $limit = 0)
     {
-        $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}&startindex={$start}&limit={$limit}&criteria=({$criteria})";
+        if (($start != 0) && ($limit != 0)){
+            $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}&startindex={$start}&limit={$limit}&criteria=({$criteria})";
+
+        } else {
+            $curlURL = "{$this->apiEndPoint}{$this->format}/{$this->applicationName}/view/{$viewName}?authtoken={$this->authToken}&scope=creatorapi&raw=true&zc_ownername={$this->applicationOwner}&criteria=({$criteria})";
+        }
 
         try {
             return $this->doCurl($curlURL);
@@ -129,6 +134,17 @@ class CreatorAPI
             return $exception;
         }
 
+    }
+
+    /**
+     * get record by id
+     * @param $recordID
+     * @param $viewName
+     * @return bool|\Exception|string
+     */
+    public function getRecordByID($recordID , $viewName)
+    {
+        return $this->searchRecords('ID=='.$recordID, $viewName );
     }
 
     /**
@@ -260,6 +276,51 @@ class CreatorAPI
     }
 
     /**
+     * Uploads file to a record
+     * @param $recordID
+     * @param $file
+     * @param $formName
+     * @param $fieldName
+     * @param string $fileName
+     * @return bool|\Exception|string
+     */
+    public function uploadFile($recordID, $file, $formName, $fieldName, $fileName = '')
+    {
+
+        $mime = mime_content_type($file);
+        $info = pathinfo($file);
+        $name = $info['basename'];
+        if ($fileName != ''){
+            $name = $fileName;
+        }
+        $output = new \CURLFile($file, $mime, $name);
+
+
+        $curlURL = "{$this->apiEndPoint}xml/fileupload/";
+
+        $dataArray = array(
+            'authtoken' => $this->authToken,
+            'scope' => 'creatorapi',
+            'applinkname' => $this->applicationName,
+            'formname' => $formName,
+            'fieldname' => $fieldName,
+            'recordId' => $recordID,
+            'filename' => $name,
+            'file' => $output,
+        );
+
+        try {
+            $xml = $this->doCurl($curlURL, $dataArray);
+            $xmlObject = simplexml_load_string($xml);
+
+            return json_encode($xmlObject);
+        } catch (\Exception $exception){
+            return $exception;
+        }
+
+    }
+
+    /**
      * send the request
      * @param $url
      * @param null $postData
@@ -272,18 +333,17 @@ class CreatorAPI
             $post = 1;
         }
 
-
         // Do curl to get data from creator
         $curl = curl_init();
         curl_setopt_array($curl, array(
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => 'W3S Cloud API',
+            CURLOPT_USERAGENT => 'Zoho Creator API',
             CURLOPT_POST => $post,
         ));
 
         if($post){
-            curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Content-Type: multipart/form-data',
                 'Connection: Keep-Alive'
